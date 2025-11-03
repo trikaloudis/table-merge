@@ -28,14 +28,43 @@ def convert_df_to_csv(df):
 
 # --- Page Configuration ---
 st.set_page_config(
-    page_title="Data Merger App",
+    page_title="AquOmixLab Table Merging App",
     page_icon="🔄",
     layout="wide"
 )
 
+# --- Sidebar Logo ---
+st.sidebar.image("https://raw.githubusercontent.com/trikaloudis/table-merge/main/Aquomixlab%20Logo%20v2.png", use_column_width=True)
+st.sidebar.markdown("[www.aquomixlab.com](https://www.aquomixlab.com)")
+
 # --- App Title ---
-st.title("🔄 Table Merger App")
+st.title("🔄 AquOmixLab Table Merging App")
 st.write("Upload 2 or 3 Excel or CSV files to merge them based on selected key columns.")
+
+# --- Instructions Expander ---
+with st.expander("ℹ️ How to use this app & understanding merge types", expanded=False):
+    st.markdown("""
+    This app allows you to combine (or "merge") two or three tables into a single one.
+
+    **Basic Steps:**
+    1.  **Step 1:** Upload your first two files ("File 1" and "File 2").
+    2.  For each file, select the "key" column(s) you want to match. For example, this might be an "ID" column, a "Sample Name", or "Email" that is present in both tables.
+    3.  Select your desired "merge type" (see explanations below).
+    4.  Click "Merge Files 1 & 2".
+    5.  **Step 2 (Optional):** Once the first merge is complete, you can upload a "File 3".
+    6.  Select the key column(s) from your newly merged table and the key column(s) from File 3.
+    7.  Select the merge type and click "Merge with File 3".
+    8.  Use the "Download" buttons to save your merged tables as CSV files.
+
+    **What do the merge types mean?**
+
+    Imagine you are merging **Table A (Left)** and **Table B (Right)** on a key.
+
+    * **Inner:** (Default) Keeps only the rows that have a matching key in *both* Table A and Table B. This is the most restrictive merge.
+    * **Left:** Keeps *all* rows from Table A (the left table) and adds the data from Table B where the keys match. If a row in Table A has no match in Table B, the new columns from B will be blank (NaN).
+    * **Right:** The opposite of a left merge. Keeps *all* rows from Table B (the right table) and adds data from Table A where keys match. If a row in Table B has no match in Table A, the new columns from A will be blank (NaN).
+    * **Outer:** Keeps *all* rows from *both* tables. It will match up rows where the keys align and fill in blanks (NaN) for all rows that do not have a match in the other table. This is the least restrictive merge.
+    """)
 
 # --- Session State Initialization ---
 if 'merged_df_1_2' not in st.session_state:
@@ -180,3 +209,5 @@ with col2:
                         st.info("Select key columns for both tables to enable final merge.")
     else:
         st.info("Complete Step 1 to enable merging with a third file.")
+
+
