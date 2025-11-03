@@ -64,6 +64,11 @@ with st.expander("ℹ️ How to use this app & understanding merge types", expan
     * **Left:** Keeps *all* rows from Table A (the left table) and adds the data from Table B where the keys match. If a row in Table A has no match in Table B, the new columns from B will be blank (NaN).
     * **Right:** The opposite of a left merge. Keeps *all* rows from Table B (the right table) and adds data from Table A where keys match. If a row in Table B has no match in Table A, the new columns from A will be blank (NaN).
     * **Outer:** Keeps *all* rows from *both* tables. It will match up rows where the keys align and fill in blanks (NaN) for all rows that do not have a match in the other table. This is the least restrictive merge.
+
+    **A Note on Large Files:**
+    * This app runs on Streamlit Cloud's free tier, which provides 1 GB of RAM.
+    * While you can upload files up to 200MB, merging very large tables (e.g., 100MB + 100MB) may fail if the resulting table exceeds the 1 GB memory limit.
+    * If the app crashes or becomes unresponsive during a merge, your files are likely too large for this free service.
     """)
 
 # --- Session State Initialization ---
@@ -90,7 +95,7 @@ with col1:
         if file_1:
             st.session_state.df1 = load_data(file_1)
             if st.session_state.df1 is not None:
-                st.dataframe(st.session_state.df1.head(), use_container_width=True)
+                st.dataframe(st.session_state.df1, use_container_width=True, height=250)
                 keys_1 = st.multiselect("Select key column(s) for File 1", st.session_state.df1.columns, key="keys1")
 
     # --- File 2 Upload ---
@@ -100,7 +105,7 @@ with col1:
         if file_2:
             st.session_state.df2 = load_data(file_2)
             if st.session_state.df2 is not None:
-                st.dataframe(st.session_state.df2.head(), use_container_width=True)
+                st.dataframe(st.session_state.df2, use_container_width=True, height=250)
                 keys_2 = st.multiselect("Select key column(s) for File 2", st.session_state.df2.columns, key="keys2")
 
     # --- Merge 1 & 2 Logic ---
@@ -138,7 +143,7 @@ with col2:
 
     if st.session_state.merged_df_1_2 is not None:
         st.subheader("Merged Table (1 & 2)")
-        st.dataframe(st.session_state.merged_df_1_2.head(), use_container_width=True)
+        st.dataframe(st.session_state.merged_df_1_2, use_container_width=True, height=250)
         
         # --- Download Button for Intermediate Merge ---
         csv_1_2 = convert_df_to_csv(st.session_state.merged_df_1_2)
@@ -157,7 +162,7 @@ with col2:
             if file_3:
                 st.session_state.df3 = load_data(file_3)
                 if st.session_state.df3 is not None:
-                    st.dataframe(st.session_state.df3.head(), use_container_width=True)
+                    st.dataframe(st.session_state.df3, use_container_width=True, height=250)
                     
                     # --- Merge 3 Logic ---
                     keys_merged = st.multiselect(
@@ -193,7 +198,7 @@ with col2:
                                 )
                                 st.success("Final merge successful!")
                                 st.subheader("Final Merged Table")
-                                st.dataframe(final_merged_df, use_container_width=True)
+                                st.dataframe(final_merged_df, use_container_width=True, height=400)
                                 
                                 # --- Final Download Button ---
                                 csv_final = convert_df_to_csv(final_merged_df)
@@ -209,5 +214,6 @@ with col2:
                         st.info("Select key columns for both tables to enable final merge.")
     else:
         st.info("Complete Step 1 to enable merging with a third file.")
+
 
 
