@@ -41,7 +41,7 @@ st.sidebar.markdown("[www.aquomixlab.com](https://www.aquomixlab.com)")
 
 # --- App Title ---
 st.title("🔄 AquOmixLab Table Merging App")
-st.write("Upload 2 or 3 Excel or CSV files to merge them based on selected key columns.")
+st.write("Upload 2 or 3 Excel, CSV, TXT or TSV files to merge them based on selected key columns.")
 
 # --- Instructions Expander ---
 with st.expander("ℹ️ How to use this app & understanding merge types", expanded=False):
@@ -216,6 +216,7 @@ with col2:
                         st.info("Select key columns for both tables to enable final merge.")
     else:
         st.info("Complete Step 1 to enable merging with a third file.")
+
 
 
 
