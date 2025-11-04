@@ -8,6 +8,8 @@ def load_data(uploaded_file):
     try:
         if uploaded_file.name.endswith('.csv'):
             df = pd.read_csv(uploaded_file)
+        elif uploaded_file.name.endswith('.tsv') or uploaded_file.name.endswith('.txt'):
+            df = pd.read_csv(uploaded_file, sep='\t')
         elif uploaded_file.name.endswith(('.xls', '.xlsx')):
             # Use a buffer to avoid "ValueError: I/O operation on closed file."
             buffer = io.BytesIO(uploaded_file.getvalue())
@@ -91,7 +93,7 @@ with col1:
     # --- File 1 Upload ---
     with st.container(border=True):
         st.subheader("File 1 (Left Table)")
-        file_1 = st.file_uploader("Upload your first file (CSV or Excel)", type=["csv", "xls", "xlsx"], key="file1")
+        file_1 = st.file_uploader("Upload your first file (CSV, TSV, TXT, or Excel)", type=["csv", "xls", "xlsx", "tsv", "txt"], key="file1")
         if file_1:
             st.session_state.df1 = load_data(file_1)
             if st.session_state.df1 is not None:
@@ -101,7 +103,7 @@ with col1:
     # --- File 2 Upload ---
     with st.container(border=True):
         st.subheader("File 2 (Right Table)")
-        file_2 = st.file_uploader("Upload your second file (CSV or Excel)", type=["csv", "xls", "xlsx"], key="file2")
+        file_2 = st.file_uploader("Upload your second file (CSV, TSV, TXT, or Excel)", type=["csv", "xls", "xlsx", "tsv", "txt"], key="file2")
         if file_2:
             st.session_state.df2 = load_data(file_2)
             if st.session_state.df2 is not None:
@@ -157,7 +159,7 @@ with col2:
         # --- File 3 Upload ---
         with st.container(border=True):
             st.subheader("File 3 (Right Table)")
-            file_3 = st.file_uploader("Upload your third file (CSV or Excel)", type=["csv", "xls", "xlsx"], key="file3")
+            file_3 = st.file_uploader("Upload your third file (CSV, TSV, TXT, or Excel)", type=["csv", "xls", "xlsx", "tsv", "txt"], key="file3")
             
             if file_3:
                 st.session_state.df3 = load_data(file_3)
@@ -214,6 +216,7 @@ with col2:
                         st.info("Select key columns for both tables to enable final merge.")
     else:
         st.info("Complete Step 1 to enable merging with a third file.")
+
 
 
 
